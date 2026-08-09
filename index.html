@@ -385,6 +385,13 @@
             border-radius: 10px;
         }
 
+        .breakout-tries {
+            font-size: 1.1rem;
+            color: #e91e63;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
         /* Final screen */
         .final-card {
             background: rgba(255,255,255,0.95);
@@ -609,7 +616,7 @@
                 <div class="minigame-title">🎮 Word Guessing Game</div>
 
                 <p style="color: #711c4c; margin-bottom: 20px; font-size: 1.1rem;">
-                    Guess the city where I would love to take you! 🌍
+                    Which city will always have an special place in both our hearts? 🌍
                 </p>
 
                 <div class="word-guess-container">
@@ -644,6 +651,8 @@
                 <p style="color: #711c4c; margin-bottom: 20px; font-size: 1.1rem;">
                     Break all the bricks! Use your paddle to keep the ball in play. 🎮
                 </p>
+
+                <div class="breakout-tries">Tries remaining: <span id="triesLeft">5</span>/5</div>
 
                 <canvas id="breakoutCanvas" width="800" height="400"></canvas>
 
@@ -1111,6 +1120,8 @@
 
         let breakoutGameRunning = false;
         let breakoutGameWon = false;
+        let breakoutTries = 5;
+        let breakoutMaxTries = 5;
 
         const canvas = document.getElementById("breakoutCanvas");
         const ctx = canvas ? canvas.getContext("2d") : null;
@@ -1127,8 +1138,8 @@
             x: canvas ? canvas.width / 2 : 0,
             y: canvas ? canvas.height - 40 : 0,
             radius: 5,
-            dx: 4,
-            dy: -4
+            dx: 3,
+            dy: -3
         };
 
         let bricks = [];
@@ -1142,9 +1153,9 @@
             const brickOffsetTop = 30;
             const brickOffsetLeft = 10;
             
-            for (let row = 0; row < 3; row++) {
+            for (let row = 0; row < 2; row++) {
                 bricks[row] = [];
-                for (let col = 0; col < 9; col++) {
+                for (let col = 0; col < 8; col++) {
                     bricks[row][col] = {
                         x: col * (brickWidth + brickPadding) + brickOffsetLeft,
                         y: row * (brickHeight + brickPadding) + brickOffsetTop,
@@ -1154,7 +1165,7 @@
                     };
                 }
             }
-            brickCount = 27;
+            brickCount = 16;
         }
 
         function drawBreakout() {
@@ -1233,17 +1244,23 @@
                 }
             }
             
-            // Game over
+            // Game over - lose a try
             if (ball.y - ball.radius > canvas.height) {
-                breakoutGameRunning = false;
-                alert("Game Over! Try again! 💔");
-                initBricks();
-                ball.x = canvas.width / 2;
-                ball.y = canvas.height - 40;
-                ball.dx = 4;
-                ball.dy = -4;
-                paddle.x = canvas.width / 2 - 50;
-                breakoutGameRunning = true;
+                breakoutTries--;
+                document.getElementById("triesLeft").textContent = breakoutTries;
+                
+                if (breakoutTries <= 0) {
+                    breakoutGameRunning = false;
+                    alert("Game Over! You've used all your tries! But you can still continue! 💔");
+                    document.getElementById("continueFromGame2").style.display = "inline-block";
+                } else {
+                    // Reset ball and paddle for next try
+                    ball.x = canvas.width / 2;
+                    ball.y = canvas.height - 40;
+                    ball.dx = 3;
+                    ball.dy = -3;
+                    paddle.x = canvas.width / 2 - 50;
+                }
             }
         }
 
@@ -1253,6 +1270,8 @@
             
             breakoutGameRunning = true;
             breakoutGameWon = false;
+            breakoutTries = breakoutMaxTries;
+            document.getElementById("triesLeft").textContent = breakoutTries;
             
             initBricks();
             
