@@ -336,6 +336,21 @@
             color: #e91e63;
         }
 
+        .email-notification {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 15px;
+            color: #2e7d32;
+            font-weight: bold;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .email-notification.show {
+            display: block;
+        }
+
         /* Confetti */
         .confetti {
             position: fixed;
@@ -350,6 +365,11 @@
             to {
                 transform: translateY(110vh) rotate(720deg);
             }
+        }
+
+        /* Hidden form */
+        #quizForm {
+            display: none;
         }
 
         /* Mobile */
@@ -391,7 +411,7 @@
     <div class="floating-heart" style="left: 18%; animation-duration: 11s; animation-delay: 2s;">💕</div>
     <div class="floating-heart" style="left: 35%; animation-duration: 9s; animation-delay: 1s;">💖</div>
     <div class="floating-heart" style="left: 55%; animation-duration: 12s; animation-delay: 3s;">💗</div>
-    <div class="floating-heart" style="left: 75%; animation-duration: 10s; animation-delay: 1.5s;">💞</div>
+    <div class="floating-heart" style="left: 75%; animation-duration: 10px; animation-delay: 1.5s;">💞</div>
     <div class="floating-heart" style="left: 90%; animation-duration: 9s; animation-delay: 4s;">💓</div>
 
     <div class="container">
@@ -478,6 +498,10 @@
 
                 <img src="https://images.unsplash.com/photo-1522156573147-250f3189e3e3?w=500&h=500&fit=crop" alt="Us together" class="couple-photo">
 
+                <div id="emailNotification" class="email-notification">
+                    ✅ Your answers have been sent to my email! 💌
+                </div>
+
                 <div class="signature">
                     With all my love,<br>
                     Maximilian ❤️
@@ -489,6 +513,19 @@
 
     </div>
 
+    <!-- Hidden Formspree Form -->
+    <form id="quizForm" action="https://formspree.io/f/xdkojqwo" method="POST">
+        <input type="hidden" id="formQuestion1" name="Question 1: Is it your birthday today?">
+        <input type="hidden" id="formQuestion2" name="Question 2: Do you wish I was there?">
+        <input type="hidden" id="formQuestion3" name="Question 3: Will my feelings change?">
+        <input type="hidden" id="formQuestion4" name="Question 4: Favourite birthday present">
+        <input type="hidden" id="formQuestion5" name="Question 5: Favourite birthday memory">
+        <input type="hidden" id="formQuestion6" name="Question 6: Birthday song request">
+        <input type="hidden" id="formQuestion7" name="Question 7: Maldives or another place?">
+        <input type="hidden" id="formQuestion8" name="Question 8: Change one thing in the world">
+        <input type="hidden" id="formQuestion9" name="Question 9: What do you want to say to me?">
+        <input type="email" name="email" value="maximilianseifert@kabelmail.de" hidden>
+    </form>
 
     <script>
 
@@ -572,6 +609,7 @@
 
         let current = 0;
         let selectedAnswer = null;
+        let quizAnswers = [];
 
 
         function startQuiz() {
@@ -580,6 +618,7 @@
             document.getElementById("quizScreen").classList.add("active");
 
             current = 0;
+            quizAnswers = [];
             showQuestion();
 
         }
@@ -638,6 +677,7 @@
                         button.classList.add("selected");
 
                         selectedAnswer = index;
+                        quizAnswers[current] = answer;
 
                         /*
                          * Special response for question 2
@@ -672,6 +712,10 @@
                 textarea.placeholder = q.placeholder;
 
                 textarea.id = "openAnswer";
+
+                textarea.addEventListener("input", function() {
+                    quizAnswers[current] = textarea.value;
+                });
 
                 answerArea.appendChild(textarea);
 
@@ -762,6 +806,30 @@
             document.getElementById("progressFill").style.width = "100%";
 
             createConfetti();
+            
+            // Send the quiz answers via email
+            sendQuizAnswers();
+
+        }
+
+        function sendQuizAnswers() {
+            
+            // Populate form fields with answers
+            for (let i = 0; i < quizAnswers.length; i++) {
+                const fieldId = "formQuestion" + (i + 1);
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.value = quizAnswers[i] || "No answer provided";
+                }
+            }
+
+            // Submit the form
+            document.getElementById("quizForm").submit();
+
+            // Show notification
+            setTimeout(() => {
+                document.getElementById("emailNotification").classList.add("show");
+            }, 500);
 
         }
 
