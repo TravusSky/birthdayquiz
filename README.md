@@ -319,6 +319,16 @@
             color: #70224e;
         }
 
+        .couple-photo {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 20px;
+            margin: 30px auto;
+            box-shadow: 0 10px 30px rgba(190, 52, 111, 0.3);
+            animation: fadeIn 0.8s ease;
+        }
+
         .signature {
             margin-top: 30px;
             font-size: 1.4rem;
@@ -365,6 +375,10 @@
 
             .big-green-heart {
                 font-size: 100px;
+            }
+
+            .couple-photo {
+                max-width: 100%;
             }
         }
     </style>
@@ -461,6 +475,8 @@
                     I hope you have an amazing birthday, Alex and I really
                     hope this quiz made you realize how special you are to me.
                 </p>
+
+                <img src="https://images.unsplash.com/photo-1522156573147-250f3189e3e3?w=500&h=500&fit=crop" alt="Us together" class="couple-photo">
 
                 <div class="signature">
                     With all my love,<br>
