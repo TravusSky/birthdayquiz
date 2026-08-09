@@ -131,7 +131,8 @@
 
         .start-btn,
         .next-btn,
-        .finish-btn {
+        .finish-btn,
+        .minigame-btn {
             background: linear-gradient(135deg, #e91e63, #c2185b);
             color: white;
             padding: 15px 35px;
@@ -143,7 +144,8 @@
 
         .start-btn:hover,
         .next-btn:hover,
-        .finish-btn:hover {
+        .finish-btn:hover,
+        .minigame-btn:hover {
             transform: translateY(-3px) scale(1.03);
             box-shadow: 0 12px 25px rgba(194, 24, 91, 0.4);
         }
@@ -272,6 +274,117 @@
             animation: fadeIn 0.4s ease;
         }
 
+        /* Minigame styles */
+        .minigame-card {
+            background: rgba(255,255,255,0.95);
+            padding: 35px 30px;
+            border-radius: 28px;
+            box-shadow: 0 15px 45px rgba(190, 52, 111, 0.22);
+            text-align: center;
+        }
+
+        .minigame-title {
+            font-size: 1.8rem;
+            color: #d63384;
+            margin-bottom: 10px;
+        }
+
+        .relaxation-note {
+            font-size: 1.3rem;
+            color: #e91e63;
+            margin-bottom: 25px;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        /* Word Guess Game */
+        .word-guess-container {
+            margin: 25px 0;
+        }
+
+        .word-display {
+            font-size: 2.5rem;
+            letter-spacing: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #711c4c;
+            font-family: monospace;
+        }
+
+        .guess-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid #f2a7c6;
+            border-radius: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .guess-input:focus {
+            outline: none;
+            border-color: #e91e63;
+            box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.1);
+        }
+
+        .guess-btn {
+            background: linear-gradient(135deg, #e91e63, #c2185b);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(194, 24, 91, 0.3);
+            transition: all 0.25s ease;
+        }
+
+        .guess-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 25px rgba(194, 24, 91, 0.4);
+        }
+
+        .guess-message {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            min-height: 30px;
+        }
+
+        .guess-correct {
+            color: #4caf50;
+        }
+
+        .guess-incorrect {
+            color: #f44336;
+        }
+
+        .guess-hint {
+            color: #ff9800;
+        }
+
+        /* Breakout Game */
+        #breakoutCanvas {
+            border: 3px solid #e91e63;
+            background: #000;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .breakout-instructions {
+            font-size: 0.95rem;
+            color: #711c4c;
+            margin-top: 15px;
+            background: #fff0f6;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
         /* Final screen */
         .final-card {
             background: rgba(255,255,255,0.95);
@@ -380,6 +493,7 @@
 
             .welcome-card,
             .question-card,
+            .minigame-card,
             .final-card {
                 padding: 30px 20px;
                 border-radius: 24px;
@@ -399,6 +513,11 @@
 
             .couple-photo {
                 max-width: 100%;
+            }
+
+            .word-display {
+                font-size: 2rem;
+                letter-spacing: 6px;
             }
         }
     </style>
@@ -472,6 +591,69 @@
                 <div class="button-area">
                     <button id="nextButton" class="next-btn" onclick="nextQuestion()">
                         Next 💕
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================== WORD GUESS MINIGAME ==================== -->
+        <section id="wordGuessScreen" class="screen">
+
+            <div class="minigame-card">
+
+                <p class="relaxation-note">✨ Time to relax a bit from those difficult questions ;) ✨</p>
+
+                <div class="minigame-title">🎮 Word Guessing Game</div>
+
+                <p style="color: #711c4c; margin-bottom: 20px; font-size: 1.1rem;">
+                    Guess the city where I would love to take you! 🌍
+                </p>
+
+                <div class="word-guess-container">
+                    <div class="word-display" id="wordDisplay">_ _ _ _ _ _ _ _ _</div>
+                    <input type="text" id="guessInput" class="guess-input" placeholder="Guess a letter..." maxlength="1">
+                    <br>
+                    <button class="guess-btn" onclick="guessLetter()">Guess Letter</button>
+                    <button class="guess-btn" onclick="guessWord()" style="margin-left: 10px;">Guess Word</button>
+                    <div class="guess-message" id="guessMessage"></div>
+                </div>
+
+                <div class="button-area" style="justify-content: center; margin-top: 30px;">
+                    <button id="continueFromGame1" class="minigame-btn" onclick="continueToNextMinigame()" style="display: none;">
+                        Continue 💕
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================== BREAKOUT MINIGAME ==================== -->
+        <section id="breakoutScreen" class="screen">
+
+            <div class="minigame-card">
+
+                <p class="relaxation-note">✨ You've earned another break! Let's play! ✨</p>
+
+                <div class="minigame-title">🎮 Breakout Game</div>
+
+                <p style="color: #711c4c; margin-bottom: 20px; font-size: 1.1rem;">
+                    Break all the bricks! Use your paddle to keep the ball in play. 🎮
+                </p>
+
+                <canvas id="breakoutCanvas" width="800" height="400"></canvas>
+
+                <div class="breakout-instructions">
+                    Use your mouse to move the paddle left and right. Break all the bricks to win! 🏆
+                </div>
+
+                <div class="button-area" style="justify-content: center; margin-top: 30px;">
+                    <button id="continueFromGame2" class="minigame-btn" onclick="continueFromBreakout()" style="display: none;">
+                        I'm ready to continue! 💕
                     </button>
                 </div>
 
@@ -787,7 +969,7 @@
 
             if (current >= questions.length) {
 
-                showFinalScreen();
+                showMinigames();
 
             } else {
 
@@ -795,6 +977,312 @@
 
             }
 
+        }
+
+        /*
+         * ============================================================
+         * WORD GUESS MINIGAME
+         * ============================================================
+         */
+
+        const wordToGuess = "AMSTERDAM";
+        let guessedLetters = [];
+        let gameWon = false;
+
+        function startWordGame() {
+            document.getElementById("quizScreen").classList.remove("active");
+            document.getElementById("wordGuessScreen").classList.add("active");
+            guessedLetters = [];
+            gameWon = false;
+            document.getElementById("guessInput").value = "";
+            document.getElementById("guessMessage").textContent = "";
+            document.getElementById("continueFromGame1").style.display = "none";
+            updateWordDisplay();
+        }
+
+        function updateWordDisplay() {
+            let display = "";
+            for (let i = 0; i < wordToGuess.length; i++) {
+                if (guessedLetters.includes(wordToGuess[i])) {
+                    display += wordToGuess[i] + " ";
+                } else {
+                    display += "_ ";
+                }
+            }
+            document.getElementById("wordDisplay").textContent = display.trim();
+        }
+
+        function guessLetter() {
+            if (gameWon) return;
+            
+            const input = document.getElementById("guessInput").value.toUpperCase();
+            const message = document.getElementById("guessMessage");
+            
+            if (!input) {
+                message.textContent = "Please enter a letter! 📝";
+                message.className = "guess-message guess-hint";
+                return;
+            }
+            
+            if (guessedLetters.includes(input)) {
+                message.textContent = "You already guessed that letter! 🤔";
+                message.className = "guess-message guess-hint";
+                document.getElementById("guessInput").value = "";
+                return;
+            }
+            
+            guessedLetters.push(input);
+            
+            if (wordToGuess.includes(input)) {
+                message.textContent = "Great! That letter is in the word! 🎉";
+                message.className = "guess-message guess-correct";
+            } else {
+                message.textContent = "Sorry, that letter is not in the word. Try again! ❌";
+                message.className = "guess-message guess-incorrect";
+            }
+            
+            updateWordDisplay();
+            document.getElementById("guessInput").value = "";
+            
+            // Check if won
+            let won = true;
+            for (let letter of wordToGuess) {
+                if (!guessedLetters.includes(letter)) {
+                    won = false;
+                    break;
+                }
+            }
+            
+            if (won) {
+                gameWon = true;
+                message.textContent = "🎊 YOU WON! The city is AMSTERDAM! 🎊";
+                message.className = "guess-message guess-correct";
+                message.style.fontSize = "1.2rem";
+                document.getElementById("continueFromGame1").style.display = "inline-block";
+            }
+        }
+
+        function guessWord() {
+            if (gameWon) return;
+            
+            const input = document.getElementById("guessInput").value.toUpperCase();
+            const message = document.getElementById("guessMessage");
+            
+            if (!input) {
+                message.textContent = "Please enter a word! 📝";
+                message.className = "guess-message guess-hint";
+                return;
+            }
+            
+            if (input === wordToGuess) {
+                gameWon = true;
+                guessedLetters = wordToGuess.split("");
+                updateWordDisplay();
+                message.textContent = "🎊 YOU WON! The city is AMSTERDAM! 🎊";
+                message.className = "guess-message guess-correct";
+                message.style.fontSize = "1.2rem";
+                document.getElementById("continueFromGame1").style.display = "inline-block";
+            } else {
+                message.textContent = "Wrong word! Try again! ❌";
+                message.className = "guess-message guess-incorrect";
+                document.getElementById("guessInput").value = "";
+            }
+        }
+
+        function continueToNextMinigame() {
+            document.getElementById("wordGuessScreen").classList.remove("active");
+            startBreakoutGame();
+        }
+
+        // Allow Enter key to guess letter in word game
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("guessInput")?.addEventListener("keypress", function(e) {
+                if (e.key === "Enter") {
+                    guessLetter();
+                }
+            });
+        });
+
+        /*
+         * ============================================================
+         * BREAKOUT MINIGAME
+         * ============================================================
+         */
+
+        let breakoutGameRunning = false;
+        let breakoutGameWon = false;
+
+        const canvas = document.getElementById("breakoutCanvas");
+        const ctx = canvas ? canvas.getContext("2d") : null;
+
+        let paddle = {
+            x: canvas ? canvas.width / 2 - 50 : 0,
+            y: canvas ? canvas.height - 20 : 0,
+            width: 100,
+            height: 10,
+            dx: 0
+        };
+
+        let ball = {
+            x: canvas ? canvas.width / 2 : 0,
+            y: canvas ? canvas.height - 40 : 0,
+            radius: 5,
+            dx: 4,
+            dy: -4
+        };
+
+        let bricks = [];
+        let brickCount = 0;
+
+        function initBricks() {
+            bricks = [];
+            const brickWidth = 75;
+            const brickHeight = 15;
+            const brickPadding = 10;
+            const brickOffsetTop = 30;
+            const brickOffsetLeft = 10;
+            
+            for (let row = 0; row < 3; row++) {
+                bricks[row] = [];
+                for (let col = 0; col < 9; col++) {
+                    bricks[row][col] = {
+                        x: col * (brickWidth + brickPadding) + brickOffsetLeft,
+                        y: row * (brickHeight + brickPadding) + brickOffsetTop,
+                        width: brickWidth,
+                        height: brickHeight,
+                        status: 1
+                    };
+                }
+            }
+            brickCount = 27;
+        }
+
+        function drawBreakout() {
+            // Clear canvas
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw bricks
+            ctx.fillStyle = "#e91e63";
+            for (let row = 0; row < bricks.length; row++) {
+                for (let col = 0; col < bricks[row].length; col++) {
+                    if (bricks[row][col].status === 1) {
+                        ctx.fillRect(bricks[row][col].x, bricks[row][col].y, 
+                                     bricks[row][col].width, bricks[row][col].height);
+                    }
+                }
+            }
+            
+            // Draw paddle
+            ctx.fillStyle = "#ff69a6";
+            ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+            ctx.strokeStyle = "#e91e63";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
+            
+            // Draw ball
+            ctx.fillStyle = "#ffd700";
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function updateBreakout() {
+            if (!breakoutGameRunning) return;
+            
+            // Move ball
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+            
+            // Wall collisions
+            if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+                ball.dx = -ball.dx;
+            }
+            if (ball.y - ball.radius < 0) {
+                ball.dy = -ball.dy;
+            }
+            
+            // Paddle collision
+            if (ball.y + ball.radius > paddle.y &&
+                ball.y - ball.radius < paddle.y + paddle.height &&
+                ball.x > paddle.x &&
+                ball.x < paddle.x + paddle.width) {
+                ball.dy = -ball.dy;
+            }
+            
+            // Brick collisions
+            for (let row = 0; row < bricks.length; row++) {
+                for (let col = 0; col < bricks[row].length; col++) {
+                    let b = bricks[row][col];
+                    if (b.status === 1) {
+                        if (ball.x > b.x &&
+                            ball.x < b.x + b.width &&
+                            ball.y > b.y &&
+                            ball.y < b.y + b.height) {
+                            ball.dy = -ball.dy;
+                            b.status = 0;
+                            brickCount--;
+                            
+                            if (brickCount === 0) {
+                                breakoutGameWon = true;
+                                breakoutGameRunning = false;
+                                document.getElementById("continueFromGame2").style.display = "inline-block";
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Game over
+            if (ball.y - ball.radius > canvas.height) {
+                breakoutGameRunning = false;
+                alert("Game Over! Try again! 💔");
+                initBricks();
+                ball.x = canvas.width / 2;
+                ball.y = canvas.height - 40;
+                ball.dx = 4;
+                ball.dy = -4;
+                paddle.x = canvas.width / 2 - 50;
+                breakoutGameRunning = true;
+            }
+        }
+
+        function startBreakoutGame() {
+            document.getElementById("wordGuessScreen").classList.remove("active");
+            document.getElementById("breakoutScreen").classList.add("active");
+            
+            breakoutGameRunning = true;
+            breakoutGameWon = false;
+            
+            initBricks();
+            
+            // Mouse move handler
+            canvas.addEventListener("mousemove", function(e) {
+                let rect = canvas.getBoundingClientRect();
+                paddle.x = e.clientX - rect.left - paddle.width / 2;
+                if (paddle.x < 0) paddle.x = 0;
+                if (paddle.x + paddle.width > canvas.width) paddle.x = canvas.width - paddle.width;
+            });
+            
+            function gameLoop() {
+                updateBreakout();
+                drawBreakout();
+                if (breakoutGameRunning || !breakoutGameWon) {
+                    requestAnimationFrame(gameLoop);
+                }
+            }
+            
+            gameLoop();
+        }
+
+        function continueFromBreakout() {
+            breakoutGameRunning = false;
+            document.getElementById("breakoutScreen").classList.remove("active");
+            showFinalScreen();
+        }
+
+        function showMinigames() {
+            startWordGame();
         }
 
 
@@ -837,8 +1325,6 @@
         /*
          * Birthday confetti 🎉
          */
-        // Use a JavaScript event listener instead of an inline onclick.
-        // This avoids the "startQuiz is not defined" error in local/iframe contexts.
         document.getElementById("startButton").addEventListener("click", startQuiz);
 
         function createConfetti() {
